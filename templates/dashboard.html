@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HealthPlus Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h2>Welcome to HealthPlus Dashboard</h2>
+    <a href="{{ url_for('logout') }}">Logout</a>
+    <canvas id="healthChart" width="400" height="200"></canvas>
+    <script>
+        fetch('/data')
+        .then(response => response.json())
+        .then(result => {
+            const labels = result.data.map(item => item.timestamp);
+            const heartRate = result.data.map(item => item.heart_rate);
+            const temperature = result.data.map(item => item.temperature);
+
+            const ctx = document.getElementById('healthChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Heart Rate',
+                            data: heartRate,
+                            borderColor: 'red',
+                            fill: false
+                        },
+                        {
+                            label: 'Temperature',
+                            data: temperature,
+                            borderColor: 'blue',
+                            fill: false
+                        }
+                    ]
+                }
+            });
+        });
+    </script>
+</body>
+</html>
